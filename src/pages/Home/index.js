@@ -18,7 +18,7 @@ const center = {
 };
 
 export default function HomePage() {
-  const [form, setForm] = useState({ name: "", description: "" });
+  const [form, setForm] = useState({ titulo: "", descricao: "" });
   const [markerPosition, setMarkerPosition] = useState(null);
 
   const navigate = useNavigate();
@@ -38,8 +38,8 @@ export default function HomePage() {
 
     axios
       .post(url, {
-        name: form.name,
-        description: form.description,
+        titulo: form.titulo,
+        descricao: form.descricao,
         latitude: markerPosition.lat,
         longitude: markerPosition.lng,
       })
@@ -73,22 +73,42 @@ export default function HomePage() {
             Cria novo
             <br /> Evento
           </h1>
-          <label htmlFor="name">Nome</label>
+          <label htmlFor="titulo">Titulo</label>
           <input
-            id="name"
+            id="titulo"
             type="text"
-            name="name"
-            value={form.name}
+            name="titulo"
+            value={form.titulo}
             onChange={handleForm}
             required
-            placeholder="Type the event name"
+            placeholder="Type the event title"
           />
-          <label htmlFor="description">Descrição</label>
+          <label htmlFor="descricao">Descrição</label>
           <input
-            id="description"
+            id="descricao"
             type="text"
-            name="description"
-            value={form.description}
+            name="descricao"
+            value={form.descricao}
+            onChange={handleForm}
+            required
+            placeholder="Describe the event"
+          />
+          <label htmlFor="titulo">Data de Início</label>
+          <input
+            id="descricao"
+            type="date"
+            name="descricao"
+            value={form.descricao}
+            onChange={handleForm}
+            required
+            placeholder="Describe the event"
+          />
+          <label htmlFor="titulo">Data de Termino</label>
+          <input
+            id="descricao"
+            type="date"
+            name="descricao"
+            value={form.descricao}
             onChange={handleForm}
             required
             placeholder="Describe the event"
