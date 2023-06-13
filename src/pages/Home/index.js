@@ -18,7 +18,12 @@ const center = {
 };
 
 export default function HomePage() {
-  const [form, setForm] = useState({ titulo: "", descricao: "" });
+  const [form, setForm] = useState({
+    titulo: "",
+    descricao: "",
+    dataInicio: "",
+    dataTermino: "",
+  });
   const [markerPosition, setMarkerPosition] = useState(null);
 
   const navigate = useNavigate();
@@ -27,6 +32,8 @@ export default function HomePage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  console.log(form);
+
   function createEvent(e) {
     e.preventDefault();
 
@@ -34,12 +41,15 @@ export default function HomePage() {
       alert("Informe o ponto onde irá ocorrer o evento");
       return;
     }
-    const url = "http://localhost:4000/location";
+
+    const url = "http://localhost:4000/eventos";
 
     axios
       .post(url, {
         titulo: form.titulo,
         descricao: form.descricao,
+        dataInicio: form.dataInicio,
+        dataTermino: form.dataTermino,
         latitude: markerPosition.lat,
         longitude: markerPosition.lng,
       })
@@ -93,25 +103,23 @@ export default function HomePage() {
             required
             placeholder="Describe the event"
           />
-          <label htmlFor="titulo">Data de Início</label>
+          <label htmlFor="dataInicio">Data de Início</label>
           <input
-            id="descricao"
+            id="dataInicio"
             type="date"
-            name="descricao"
-            value={form.descricao}
+            name="dataInicio"
+            value={form.dataInicio}
             onChange={handleForm}
             required
-            placeholder="Describe the event"
           />
-          <label htmlFor="titulo">Data de Termino</label>
+          <label htmlFor="dataTermino">Data de Termino</label>
           <input
-            id="descricao"
+            id="dataTermino"
             type="date"
-            name="descricao"
-            value={form.descricao}
+            name="dataTermino"
+            value={form.dataTermino}
             onChange={handleForm}
             required
-            placeholder="Describe the event"
           />
           <button type="submit">criar evento</button>
         </Form>
