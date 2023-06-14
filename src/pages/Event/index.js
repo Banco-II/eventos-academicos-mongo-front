@@ -20,28 +20,30 @@ export default function EventsPage() {
     const handleEventClose = () => setEventUpdate(false)
     const handleEventUpdate = () => setEventUpdate(true) 
 
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
+    const [titulo, setTitulo] = useState('')
+    const [descricao, setDescricao] = useState('')
     const [latitude, setLatitude] = useState('')
     const [longitude, setLongitude] = useState('')
-    const [data, setData] = useState('')
+    const [dataInicio, setDataInicio] = useState('')
+    const [dataTermino, setDataTermino] = useState('')
     const [index, setIndex] = useState(null)
     const [listEvents, setListEvents] = useState({})
 
     function clearFields(){
-        setName('')
-        setDescription('')
+        setTitulo('')
+        setDescricao('')
         setLatitude('')
         setLongitude('')
-        setData('')
+        setDataInicio('')
+        setDataTermino('')
     }
 
-    const HandleName = (e) => {
-        setName(e.target.value)
+    const HandleTitulo = (e) => {
+        setTitulo(e.target.value)
     }
     
-    const HandleDescription = (e) => {
-        setDescription(e.target.value)
+    const HandleDescricao = (e) => {
+        setDescricao(e.target.value)
     }
     
     const HandleLatitude = (e) => {
@@ -52,8 +54,12 @@ export default function EventsPage() {
         setLongitude(e.target.value)
     }
 
-    const HandleData = (e) => {
-        setData(e.target.value)
+    const HandleDataInicio = (e) => {
+        setDataInicio(e.target.value)
+    }
+
+    const HandleDataTermino = (e) => {
+        setDataTermino(e.target.value)
     }
 
     const remove = (index) => {
@@ -67,27 +73,29 @@ export default function EventsPage() {
         })
     }
 
-    const edit = (index, name, description, latitude, longitude, data) => {
-        setName(name)
-        setDescription(description)
+    const edit = (index, titulo, descricao, latitude, longitude, dataInicio, dataTermino) => {
+        setTitulo(titulo)
+        setDescricao(descricao)
         setLatitude(latitude)
         setLongitude(longitude)
-        setData(data)
+        setDataInicio(dataInicio)
+        setDataTermino(dataTermino)
         setIndex(index)
         handleEventClose()
     }
     
     const update = (e) => {
         e.preventDefault()
-        if(name == '' || description == ''  || latitude == '' || longitude == '' || data== '')
+        if(titulo == '' || descricao == ''  || latitude == '' || longitude == '' || dataInicio == '' || dataTermino == '')
             NotificationManager.warning('Erro', "Campos não preenchidos")
         else{
             const event = {
-                name: name,
-                description: description,
+                titulo: titulo,
+                descricao: descricao,
                 latitude: latitude,
                 longitude: longitude,
-                data: data,
+                dataInicio: dataInicio,
+                dataTermino: dataTermino,
             }
 
             axios.post(`event/${index}`, event)
@@ -114,15 +122,16 @@ export default function EventsPage() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if(name == '' || description == ''  || latitude == '' || longitude == '' || data== '')
+        if(titulo == '' || descricao == ''  || latitude == '' || longitude == '' || dataInicio == '' || dataTermino == '')
             NotificationManager.warning('Erro', "Campos não preenchidos")
         else{
             const event = {
-                name: name,
-                description: description,
+                titulo: titulo,
+                descricao: descricao,
                 latitude: latitude,
                 longitude: longitude,
-                data: data
+                dataInicio: dataInicio,
+                dataTermino: dataTermino
             }
 
             axios.post("event/",event)
@@ -141,10 +150,10 @@ export default function EventsPage() {
 
     const handleSearch  = (e) => {
         e.preventDefault()
-        const name = e.target.search.value
+        const titulo = e.target.search.value
 
-        if (name != ""){
-            axios.get(`event/?name=${name}`)
+        if (titulo != ""){
+            axios.get(`event/?titulo=${titulo}`)
             .then((events) => {
                 setListEvents(events.data)
                 console.log(listEvents)
@@ -163,7 +172,7 @@ export default function EventsPage() {
     return (
         <div>
             <h1>Lista de Eventos</h1>
-            <div className='divHeader'>
+            <div classtitulo='divHeader'>
                 <Button variant="primary" onClick={handleEvent}>
                     Cadastrar
                 </Button>
@@ -179,12 +188,12 @@ export default function EventsPage() {
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group>
-                            <Form.Label>Nome:</Form.Label>
-                            <Form.Control type="text" placeholder="Nome" onChange={HandleName}/>
+                            <Form.Label>Título:</Form.Label>
+                            <Form.Control type="text" placeholder="Titulo" onChange={HandleTitulo}/>
                         </Form.Group>
-                        <Form.Group controlId="formBasicDescription">
+                        <Form.Group controlId="formBasicDescricao">
                             <Form.Label>Descrição:</Form.Label>
-                            <Form.Control type="text" placeholder="Descrição" onChange={HandleDescription}/>
+                            <Form.Control type="text" placeholder="Descrição" onChange={HandleDescricao}/>
                         </Form.Group>
                         <Form.Group controlId="formBasicLatitude">
                             <Form.Label>Latitude:</Form.Label>
@@ -194,9 +203,13 @@ export default function EventsPage() {
                             <Form.Label>Longitude:</Form.Label>
                             <Form.Control type="text" placeholder="Longitude" onChange={HandleLongitude}/>
                         </Form.Group>
-                        <Form.Group controlId="formBasicData">
-                            <Form.Label>Data do evento:</Form.Label>
-                            <Form.Control type="text" onChange={HandleData}/>
+                        <Form.Group controlId="formBasicDataInicio">
+                            <Form.Label>Data de início:</Form.Label>
+                            <Form.Control type="text" onChange={HandleDataInicio}/>
+                        </Form.Group>
+                        <Form.Group controlId="formBasicDataTermino">
+                            <Form.Label>Data de término:</Form.Label>
+                            <Form.Control type="text" onChange={HandleDataTermino}/>
                         </Form.Group>
         
                         <Button variant="secondary" onClick={handleEvent}>
@@ -217,12 +230,12 @@ export default function EventsPage() {
                 <Modal.Body>
                     <Form onSubmit={update}>
                         <Form.Group>
-                            <Form.Label>Nome:</Form.Label>
-                            <Form.Control type="text" placeholder="Nome" onChange={HandleName} value={name}/>
+                            <Form.Label>Título:</Form.Label>
+                            <Form.Control type="text" placeholder="Titulo" onChange={HandleTitulo} value={titulo}/>
                         </Form.Group>
-                        <Form.Group controlId="formBasicDescription">
+                        <Form.Group controlId="formBasicDescricao">
                             <Form.Label>Descrição:</Form.Label>
-                            <Form.Control type="text" placeholder="Descrição" onChange={HandleDescription} value={description}/>
+                            <Form.Control type="text" placeholder="Descrição" onChange={HandleDescricao} value={descricao}/>
                         </Form.Group>
                         <Form.Group controlId="formBasicLatitude">
                             <Form.Label>Latitude:</Form.Label>
@@ -232,9 +245,13 @@ export default function EventsPage() {
                             <Form.Label>Longitude:</Form.Label>
                             <Form.Control type="text" placeholder="Longitude" onChange={HandleLongitude} value={longitude}/>
                         </Form.Group>
-                        <Form.Group controlId="formBasicData">
-                            <Form.Label>Data:</Form.Label>
-                            <Form.Control type="text" onChange={HandleData} value={data}/>
+                        <Form.Group controlId="formBasicDataInicio">
+                            <Form.Label>Data de início:</Form.Label>
+                            <Form.Control type="text" onChange={HandleDataInicio} value={setDataInicio}/>
+                        </Form.Group>
+                        <Form.Group controlId="formBasicDataTermino">
+                            <Form.Label>Data de término:</Form.Label>
+                            <Form.Control type="text" onChange={HandleDataTermino} value={setDataTermino}/>
                         </Form.Group>
                         
                         <Button variant="secondary" onClick={handleEventClose}>
