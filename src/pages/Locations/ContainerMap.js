@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ContainerMap = styled.div`
   width: 100vw;
   height: 100vh;
-  position: relative;
+  position: static;
   display: flex;
 `;
 export const LoadingCenter = styled.div`

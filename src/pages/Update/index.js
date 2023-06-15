@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "../../components/Forms/Form";
 import { Container } from "./style";
 import { ContainerMap, LoadingCenter } from "../../components/Maps/Map";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { MagnifyingGlass } from "react-loader-spinner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const containerStyle = {
   width: "100%",
@@ -17,7 +17,8 @@ const center = {
   lng: -38.558930105104125,
 };
 
-export default function HomePage() {
+export default function UpdatePage() {
+  const [id, setId] = useState("");
   const [form, setForm] = useState({
     titulo: "",
     descricao: "",
@@ -27,6 +28,26 @@ export default function HomePage() {
   const [markerPosition, setMarkerPosition] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state !== undefined) {
+      const data = {
+        titulo: location.state.titulo,
+        descricao: location.state.descricao,
+        dataInicio: location.state.dataInicio,
+        dataTermino: location.state.dataTermino,
+      };
+      setForm({ ...data });
+
+      const newLocation = {
+        lat: location.state.latitude,
+        lng: location.state.longitude,
+      };
+      setMarkerPosition({...newLocation});
+      setId(location.state.id);
+    }
+  }, []);
 
   function handleForm(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -40,10 +61,10 @@ export default function HomePage() {
       return;
     }
 
-    const url = "http://localhost:4000/event";
+    const url = `http://localhost:4000/event/${id}`;
 
     axios
-      .post(url, {
+      .put(url, {
         titulo: form.titulo,
         descricao: form.descricao,
         dataInicio: form.dataInicio,
@@ -78,7 +99,7 @@ export default function HomePage() {
       <Container>
         <Form onSubmit={createEvent}>
           <h1>
-            Cria novo
+            Atualize o seu
             <br /> Evento
           </h1>
           <label htmlFor="titulo">Titulo</label>
@@ -119,7 +140,7 @@ export default function HomePage() {
             onChange={handleForm}
             required
           />
-          <button type="submit">criar evento</button>
+          <button type="submit">Atualizar evento</button>
         </Form>
         <ContainerMap>
           {isLoaded ? (

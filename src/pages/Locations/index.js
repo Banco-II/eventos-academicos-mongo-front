@@ -5,18 +5,9 @@ import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { MagnifyingGlass } from "react-loader-spinner";
 import Button from "../../components/Button";
 import axios from "axios";
-import Modal from "react-modal";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import styled from "styled-components";
+import { XCircle, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const containerStyle = {
   width: "100%",
@@ -30,51 +21,31 @@ const center = {
 
 export default function LocationsPage() {
   const [markerPosition, setMarkerPosition] = useState(null);
+  const [clicked, setClicked] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [saveId, setSaveId] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataTermino, setDataTermino] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate();
 
-  function openModal() {
-    return (
-      <>
-        <button onClick={openModal}>Open Modal</button>
-        <Modal
-          isOpen={modalIsOpen}
-          onAfterOpen={afterOpenModal}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-          <button onClick={closeModal}>close</button>
-          <div>I am a modal</div>
-          <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form>
-        </Modal>
-      </>
-    );
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = "#f00";
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function handleLocation(key) {
-    alert(key);
+  function handleLocation(el) {
+    setSaveId(el._id);
+    setTitulo(el.titulo);
+    setDescricao(el.descricao);
+    setDataInicio(el.dataInicio.slice(0, 10));
+    setDataTermino(el.dataTermino.slice(0, 10));
+    setLatitude(el.latitude);
+    setLongitude(el.longitude);
+    setClicked(true);
   }
 
   useEffect(() => {
-    const url = "http://localhost:4000/eventos";
+    const url = "http://localhost:4000/event";
 
     axios
       .get(url)
@@ -83,13 +54,21 @@ export default function LocationsPage() {
         setMarkerPosition(res.data);
       })
       .catch((erro) => console.log(erro.res.message));
-  }, []);
+  }, [refresh]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyATNeUM7feB5kgq-MQlioYJO83sQOx1OY4",
   });
 
+  const deleteLocation = () => {
+    const url = `http://localhost:4000/event/${saveId}`;
+    axios.delete(url).then((res) => {
+      setClicked(false);
+      setRefresh(!refresh);
+      console.log(res.data);
+    });
+  };
   return (
     <>
       <ContainerMap>
@@ -102,10 +81,7 @@ export default function LocationsPage() {
             {markerPosition &&
               markerPosition.map((el) => (
                 <Marker
-                  onClick={() => {
-                    openModal();
-                    setIsOpen(true);
-                  }}
+                  onClick={() => handleLocation(el)}
                   position={{ lat: el.latitude, lng: el.longitude }}
                   options={{
                     label: {
@@ -132,6 +108,69 @@ export default function LocationsPage() {
         )}
         <Button />
       </ContainerMap>
+      <ModalBox clicked={clicked ? "flex" : "none"}>
+        <header>
+          <XCircle onClick={() => setClicked(!clicked)} />
+        </header>
+        <main>
+          <h1>Titulo: {titulo}</h1>
+          <h2>Descrição: {descricao}</h2>
+          <h2>Data Inicio: {dataInicio}</h2>
+          <h2>Data Termino: {dataTermino}</h2>
+        </main>
+        <footer>
+          <Edit
+            color="grey"
+            onClick={() =>
+              navigate("/update", {
+                state: {
+                  id: saveId,
+                  titulo,
+                  descricao,
+                  dataInicio,
+                  dataTermino,
+                  latitude,
+                  longitude,
+                },
+              })
+            }
+          />
+          <Trash2 color="red" onClick={deleteLocation} />
+        </footer>
+      </ModalBox>
     </>
   );
 }
+
+const ModalBox = styled.div`
+  display: ${(props) => props.clicked};
+  flex-direction: column;
+  position: absolute;
+  width: 250px;
+  z-index: 2;
+  height: auto;
+  background-color: white;
+  box-shadow: 1px 1px 1px gray;
+  border-radius: 10px;
+  top: calc(45%);
+  left: calc(45%);
+
+  header {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    justify-content: flex-end;
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+  }
+  footer {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+  }
+`;
