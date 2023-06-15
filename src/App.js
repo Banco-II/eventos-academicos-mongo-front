@@ -4,6 +4,7 @@ import HomePage from "./pages/Home";
 import LocationsPage from "./pages/Locations";
 import EventsPage from "./pages/Event";
 import SearchLocation from "./pages/SearchLocation";
+import UpdatePage from "./pages/Update";
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
         <Route path="/locations" element={<LocationsPage />} />
         <Route path="/events" element={<EventsPage/>}/>
         <Route path="/search-location" element={<SearchLocation/>}/>
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/update" element={<UpdatePage />} />
       </Routes>
     </BrowserRouter>
   );
