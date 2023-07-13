@@ -2,7 +2,6 @@ import { Routes, BrowserRouter, Route } from "react-router-dom";
 import GlobalStyle from "./styles/global-styles";
 import HomePage from "./pages/Home";
 import LocationsPage from "./pages/Locations";
-// import EventsPage from "./pages/Event";
 import UpdatePage from "./pages/Update";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -22,7 +21,6 @@ function App() {
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/locations" element={<LocationsPage />} />
-          {/* <Route path="/events" element={<EventsPage />} /> */}
           <Route path="/update" element={<UpdatePage />} />
         </Routes>
       </BrowserRouter>
