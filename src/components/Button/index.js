@@ -5,7 +5,7 @@ export default function Button(props) {
   const navigate = useNavigate();
 
   return (
-    <ButtonStyled name="Voltar" onClick={() => navigate("/")}>
+    <ButtonStyled name="Voltar" onClick={() => navigate("/home")}>
       Voltar
     </ButtonStyled>
   );
