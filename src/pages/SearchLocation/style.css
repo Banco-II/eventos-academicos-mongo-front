@@ -1,0 +1,60 @@
+body {
+    padding: 30px;
+    background-color: grey;
+}
+
+.evento-page {
+    max-width: 600px;
+    margin: 0 auto 300px;
+    background-color: #efefef;
+    padding: 20px 30px;
+    border-radius: 10px;
+}
+
+.evento-list {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    
+}
+
+.evento {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 10px 0;
+}
+
+input {
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #333974;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: .8;
+    transition: .3s;
+}
+
+button:hover {
+    opacity: 1;
+}
